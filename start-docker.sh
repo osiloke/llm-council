@@ -1,11 +1,8 @@
 #!/bin/sh
 
-# Activate Python virtual environment
-source /app/.venv/bin/activate
-
 # Start Python backend in background
 echo "Starting Python backend on port 8001..."
-cd /app && python -m backend.main &
+/app/.venv/bin/python -m backend.main &
 BACKEND_PID=$!
 
 # Wait a moment for backend to start
