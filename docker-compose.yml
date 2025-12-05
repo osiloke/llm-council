@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  llm-council:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    environment:
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/api/conversations"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
