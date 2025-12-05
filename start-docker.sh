@@ -2,7 +2,7 @@
 
 # Start Python backend in background
 echo "Starting Python backend on port 8001..."
-/app/.venv/bin/python -m backend.main &
+cd /app && /app/.venv/bin/python -m backend.main &
 BACKEND_PID=$!
 
 # Wait a moment for backend to start
