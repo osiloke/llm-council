@@ -1,18 +1,16 @@
 # Multi-stage Dockerfile for LLM Council
 # Stage 1: Build frontend
-FROM node:18-alpine AS frontend-builder
+FROM node:20-alpine AS frontend-builder
 
 WORKDIR /app/frontend
 
-# Copy frontend package files
-COPY frontend/package*.json ./
-COPY frontend/vite.config.js ./
+# Copy all frontend files
+COPY frontend/ .
 
 # Install dependencies
 RUN npm ci
 
-# Copy frontend source and build
-COPY frontend/src ./src
+# Build the frontend
 RUN npm run build
 
 # Stage 2: Build backend
