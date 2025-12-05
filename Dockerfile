@@ -30,10 +30,11 @@ RUN uv venv --python 3.11 && \
 COPY backend ./backend
 
 # Stage 3: Production image with NGINX
-FROM nginx:alpine
+FROM python:3.11-slim
 
-# Install dumb-init for proper signal handling
-RUN apk add --no-cache dumb-init
+# Install NGINX and dumb-init
+RUN apt-get update && apt-get install -y nginx dumb-init && \
+    rm -rf /var/lib/apt/lists/*
 
 # Copy built frontend to NGINX html directory
 COPY --from=frontend-builder /app/frontend/dist /usr/share/nginx/html
@@ -41,12 +42,11 @@ COPY --from=frontend-builder /app/frontend/dist /usr/share/nginx/html
 # Copy NGINX configuration
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# Copy backend application
+# Copy backend application and Python environment
 COPY --from=backend-builder /app /app
 
 # Create data directory for conversations
-RUN mkdir -p /app/data/conversations && \
-    chown -R nginx:nginx /app/data
+RUN mkdir -p /app/data/conversations
 
 # Copy startup script
 COPY start-docker.sh /start-docker.sh
